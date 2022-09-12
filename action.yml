@@ -49,7 +49,6 @@ inputs:
   libs-path:
     description: |
       Path to the libs folder
-      Would copy all contents to app/libs
       Top folder not included
     required: false
   extra-assets:
@@ -152,7 +151,7 @@ runs:
       shell: bash
       run: |
         mkdir -p ./love-actions-android/love-android/app/libs/
-        cp -r -f ${{ inputs.libs-path }}/* ./love-actions-android/love-android/app/libs/
+        cp -r -f ${{ inputs.libs-path }}/* ./love-actions-android/love-android/love/src/jni/lua-modules/
     - name: Add extra assets
       if: "${{ inputs.extra-assets != '' }}"
       shell: bash
@@ -188,14 +187,6 @@ runs:
                                      "            storePassword '${{ inputs.keystore-store-password }}'\n" \
                                      "        }\n" \
                                      "    }\n" + data[insert_pos:]
-          if "${{ inputs.libs-path }}":
-            print("Adding app/libs to build phases...")
-            insert_pos = data.find("buildTypes") - 4
-            data = data[:insert_pos] + "    sourceSets {\n" \
-                                       "        main {\n" \
-                                       "            jniLibs.srcDir(['libs'])\n" \
-                                       "        }\n" \
-                                       "    }\n" + data[insert_pos:]
           file.seek(0)
           file.truncate()
           file.write(data)
