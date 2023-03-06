@@ -43,9 +43,15 @@ inputs:
   love-package:
     description: |
       Love package
-      Would be added to app/src/embed/assets/
+      Would be added/extracted to app/src/embed/assets/
     required: false
     default: "./game.love"
+  fuse:
+    description: |
+      Whether to use the "experimental fusing" technique for improved performance
+      This should be 1 for 11.4+ and must be 0 otherwise
+    required: false
+    default: 1
   libs-path:
     description: |
       Path to the libs folder
@@ -148,10 +154,16 @@ runs:
       shell: bash
       run: |
         cp -r -f ${{ inputs.resource-path }}/* ./love-actions-android/love-android/app/src/main/res/
-    - name: Extract love package
+    - name: Copy love package
+      if: inputs.fuse == 0
       shell: bash
       run: |
-        7z x ${{ inputs.love-package }} -o./love-actions-android/love-android/app/src/embed/assets/
+        cp ${{ inputs.love-package }} ./love-actions-android/love-android/app/src/embed/assets/game.love
+    - name: Extract love package
+      if: inputs.fuse == 1
+      shell: bash
+      run: |
+        7z x ${{ inputs.love-package }} -o ./love-actions-android/love-android/app/src/embed/assets/
     - name: Add libs
       if: "${{ inputs.libs-path != '' }}"
       shell: bash
@@ -166,6 +178,7 @@ runs:
     - name: Update android information
       shell: python
       run: |
+        import
         with open("./love-actions-android/love-android/app/src/main/AndroidManifest.xml", "r+", encoding="utf-8") as file:
           data = file.read()
           data = data\
@@ -187,12 +200,18 @@ runs:
           file.seek(0)
           file.truncate()
           file.write(data)
-        with open("./love-actions-android/love-android/app/build.gradle", "r+", encoding="utf-8") as file:
+        with open("./love-actions-android/love-android/gradle.properties", "r+", encoding="utf-8") as file: # 11.4+
           data = file.read()
-          data = data\
-            .replace("org.love2d.android", "${{ inputs.bundle-id }}")\
-            .replace("30", "${{ inputs.version-code }}")\
-            .replace("11.4", "${{ inputs.version-string }}")
+          data = re.subs(r'(?<=^app.version_name\s*=\s*).+(?=$)', "${{ inputs.version-string }}", data, re.MULTILINE)
+          data = re.subs(r'(?<=^app.version_code\s*=\s*)\d+(?=$)', "${{ inputs.version-code }}", data, re.MULTILINE)
+          file.seek(0)
+          file.truncate()
+          file.write(data)
+        with open("./love-actions-android/love-android/app/build.gradle", "r+", encoding="utf-8") as file: # < 11.4
+          data = file.read()
+          data = re.subs(r'(?<=^\s*versionName ").+(?="$)', "${{ inputs.version-string }}", data, re.MULTILINE)
+          data = re.subs(r'(?<=^\s*versionCode )\d+(?=$)', "${{ inputs.version-code }}", data, re.MULTILINE)
+          data = data.replace("org.love2d.android", "${{ inputs.bundle-id }}")
           insert_pos = data.find("\n", data.find("proguardFiles")) + 1
           data = data[:insert_pos] + "            signingConfig signingConfigs.release\n" + data[insert_pos:]
           insert_pos = data.find("buildTypes") - 4
