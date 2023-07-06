@@ -58,6 +58,11 @@ inputs:
       Would copy all contents to app/libs
       Top folder not included
     required: false
+  remote-libs:
+    description: |
+      A list of remote libs
+      Would be cloned to app/libs
+      Separated by spaces
   extra-assets:
     description: |
       List of folder & file paths to be added to app/src/embed/assets/
@@ -170,6 +175,16 @@ runs:
       run: |
         mkdir -p ./love-actions-android/love-android/app/libs/
         cp -r -f ${{ inputs.libs-path }}/* ./love-actions-android/love-android/app/libs/
+    - name: Clone remote libs
+      if: "${{ inputs.remote-libs != '' }}"
+      shell: bash
+      run: |
+        mkdir -p ./love-actions-android/love-android/app/libs/
+        cd ./love-actions-android/love-android/app/libs/
+        for lib in ${{ inputs.remote-libs }}; do
+          git clone $lib
+        done
+        cd ../../../../
     - name: Add extra assets
       if: "${{ inputs.extra-assets != '' }}"
       shell: bash
