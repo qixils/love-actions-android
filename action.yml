@@ -55,13 +55,13 @@ inputs:
   libs-path:
     description: |
       Path to the libs folder
-      Would copy all contents to app/libs
+      Would copy all contents to love/src/jni/lua-modules
       Top folder not included
     required: false
   remote-libs:
     description: |
       A list of remote libs
-      Would be cloned to app/libs
+      Would be cloned to love/src/jni/lua-modules
       Separated by spaces
     required: false
   extra-assets:
@@ -174,14 +174,14 @@ runs:
       if: "${{ inputs.libs-path != '' }}"
       shell: bash
       run: |
-        mkdir -p ./love-actions-android/love-android/app/libs/
-        cp -r -f ${{ inputs.libs-path }}/* ./love-actions-android/love-android/app/libs/
+        mkdir -p ./love-actions-android/love-android/love/src/jni/lua-modules/
+        cp -r -f ${{ inputs.libs-path }}/* ./love-actions-android/love-android/love/src/jni/lua-modules/
     - name: Clone remote libs
       if: "${{ inputs.remote-libs != '' }}"
       shell: bash
       run: |
-        mkdir -p ./love-actions-android/love-android/app/libs/
-        cd ./love-actions-android/love-android/app/libs/
+        mkdir -p ./love-actions-android/love-android/love/src/jni/lua-modules/
+        cd ./love-actions-android/love-android/love/src/jni/lua-modules/
         for lib in ${{ inputs.remote-libs }}; do
           git clone --recursive $lib
         done
@@ -239,14 +239,6 @@ runs:
                                      "            storePassword '${{ inputs.keystore-store-password }}'\n" \
                                      "        }\n" \
                                      "    }\n" + data[insert_pos:]
-          if "${{ inputs.libs-path }}" or "${{ inputs.remote-libs }}":
-            print("Adding app/libs to build phases...")
-            insert_pos = data.find("buildTypes") - 4
-            data = data[:insert_pos] + "    sourceSets {\n" \
-                                       "        main {\n" \
-                                       "            jniLibs.srcDir(['libs'])\n" \
-                                       "        }\n" \
-                                       "    }\n" + data[insert_pos:]
           file.seek(0)
           file.truncate()
           file.write(data)
