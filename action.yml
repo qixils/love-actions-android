@@ -194,7 +194,7 @@ runs:
     - name: Update android information
       shell: python
       run: |
-        import
+        import re
         with open("./love-actions-android/love-android/app/src/main/AndroidManifest.xml", "r+", encoding="utf-8") as file:
           data = file.read()
           data = data\
