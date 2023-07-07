@@ -63,6 +63,7 @@ inputs:
       A list of remote libs
       Would be cloned to app/libs
       Separated by spaces
+    required: false
   extra-assets:
     description: |
       List of folder & file paths to be added to app/src/embed/assets/
@@ -238,7 +239,7 @@ runs:
                                      "            storePassword '${{ inputs.keystore-store-password }}'\n" \
                                      "        }\n" \
                                      "    }\n" + data[insert_pos:]
-          if "${{ inputs.libs-path }}":
+          if "${{ inputs.libs-path }}" or "${{ inputs.remote-libs }}":
             print("Adding app/libs to build phases...")
             insert_pos = data.find("buildTypes") - 4
             data = data[:insert_pos] + "    sourceSets {\n" \
