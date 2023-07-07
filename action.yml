@@ -169,7 +169,7 @@ runs:
       if: inputs.fuse == 1
       shell: bash
       run: |
-        7z x ${{ inputs.love-package }} --output-dir ./love-actions-android/love-android/app/src/embed/assets/
+        7z x ${{ inputs.love-package }} -olove-actions-android/love-android/app/src/embed/assets/
     - name: Add libs
       if: "${{ inputs.libs-path != '' }}"
       shell: bash
