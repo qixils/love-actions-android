@@ -218,15 +218,15 @@ runs:
           file.write(data)
         with open("./love-actions-android/love-android/gradle.properties", "r+", encoding="utf-8") as file: # 11.4+
           data = file.read()
-          data = re.subs(r'(?<=^app.version_name\s*=\s*).+(?=$)', "${{ inputs.version-string }}", data, re.MULTILINE)
-          data = re.subs(r'(?<=^app.version_code\s*=\s*)\d+(?=$)', "${{ inputs.version-code }}", data, re.MULTILINE)
+          data = re.sub(r'(?<=^app.version_name\s*=\s*).+(?=$)', "${{ inputs.version-string }}", data, re.MULTILINE)
+          data = re.sub(r'(?<=^app.version_code\s*=\s*)\d+(?=$)', "${{ inputs.version-code }}", data, re.MULTILINE)
           file.seek(0)
           file.truncate()
           file.write(data)
         with open("./love-actions-android/love-android/app/build.gradle", "r+", encoding="utf-8") as file: # < 11.4
           data = file.read()
-          data = re.subs(r'(?<=^\s*versionName ").+(?="$)', "${{ inputs.version-string }}", data, re.MULTILINE)
-          data = re.subs(r'(?<=^\s*versionCode )\d+(?=$)', "${{ inputs.version-code }}", data, re.MULTILINE)
+          data = re.sub(r'(?<=^\s*versionName ").+(?="$)', "${{ inputs.version-string }}", data, re.MULTILINE)
+          data = re.sub(r'(?<=^\s*versionCode )\d+(?=$)', "${{ inputs.version-code }}", data, re.MULTILINE)
           data = data.replace("org.love2d.android", "${{ inputs.bundle-id }}")
           insert_pos = data.find("\n", data.find("proguardFiles")) + 1
           data = data[:insert_pos] + "            signingConfig signingConfigs.release\n" + data[insert_pos:]
