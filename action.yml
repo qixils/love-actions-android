@@ -137,12 +137,6 @@ runs:
       run: |
         mkdir -p ./love-actions-android/
         mkdir -p ${{ inputs.output-folder }}
-    - name: Get Java
-      uses: actions/setup-java@v4
-      with:
-        distribution: adopt-hotspot
-        java-version: 17
-        cache: gradle
     - name: Checkout love-android
       uses: actions/checkout@v4
       with:
@@ -150,6 +144,12 @@ runs:
         ref: ${{ inputs.love-ref }}
         repository: love2d/love-android
         submodules: true
+    - name: Get Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: adopt-hotspot
+        java-version: 17
+        cache: gradle
     - name: Apply love-android patch
       if: "${{ inputs.love-patch != '' }}"
       shell: bash
