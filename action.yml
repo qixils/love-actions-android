@@ -140,15 +140,16 @@ runs:
     - name: Get Java
       uses: actions/setup-java@v4
       with:
-        distribution: adopt
-        java-version: "17"
+        distribution: adopt-hotspot
+        java-version: 17
+        cache: gradle
     - name: Checkout love-android
       uses: actions/checkout@v4
       with:
         path: ./love-actions-android/love-android
         ref: ${{ inputs.love-ref }}
         repository: love2d/love-android
-        submodules: recursive
+        submodules: true
     - name: Apply love-android patch
       if: "${{ inputs.love-patch != '' }}"
       shell: bash
@@ -268,7 +269,7 @@ runs:
       run: |
         cd ./love-actions-android/love-android/
         chmod +x ./gradlew
-        ./gradlew assembleEmbedRecordDebug
+        bash ./gradlew assembleEmbedRecordDebug
     - name: Rename package (Debug)
       shell: bash
       run: |
