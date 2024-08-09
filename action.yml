@@ -222,7 +222,7 @@ runs:
           data = re.sub(r'^app.version_name\s*=\s*.+$', "app.version_name=${{ inputs.version-string }}", data, re.MULTILINE)
           data = re.sub(r'^app.version_code\s*=\s*\d+$', "app.version_code=${{ inputs.version-code }}", data, re.MULTILINE)
           data = re.sub(r'^app.name\s*=\s*.+$', "app.name=${{ inputs.app-name }}", data, re.MULTILINE)
-          data = re.sub(r'^app.name_byte_array\s*=\s*.+$', "app.name_byte_array=" + ",".join(x for x in """${{ inputs.app-name }}""".encode('utf-8')), data, re.MULTILINE)
+          data = re.sub(r'^app.name_byte_array\s*=\s*.+$', "app.name_byte_array=" + ",".join(str(x) for x in """${{ inputs.app-name }}""".encode('utf-8')), data, re.MULTILINE)
           file.seek(0)
           file.truncate()
           file.write(data)
