@@ -221,6 +221,7 @@ runs:
           data = file.read()
           data = re.sub(r'^app.version_name\s*=\s*.+$', "app.version_name=${{ inputs.version-string }}", data, re.MULTILINE)
           data = re.sub(r'^app.version_code\s*=\s*\d+$', "app.version_code=${{ inputs.version-code }}", data, re.MULTILINE)
+          data += "app.name=${{ inputs.app-name }}"
           file.seek(0)
           file.truncate()
           file.write(data)
