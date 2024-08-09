@@ -245,26 +245,38 @@ runs:
           file.seek(0)
           file.truncate()
           file.write(data)
-        with open("./love-actions-android/love-android/fastlane/metadata/android/en-US/title.txt", "w", encoding="utf-8") as file:
-          file.write("""${{ inputs.app-name }}""")
-        with open("./love-actions-android/love-android/settings.gradle", "r+", encoding="utf-8") as file:
-          data = file.read()
-          data = data.replace("LÖVE for Android", "${{ inputs.app-name }}")
-          file.seek(0)
-          file.truncate()
-          file.write(data)
-        with open("./love-actions-android/love-android/settings.gradle", "r+", encoding="utf-8") as file:
-          data = file.read()
-          data = data.replace("LÖVE for Android", "${{ inputs.app-name }}")
-          file.seek(0)
-          file.truncate()
-          file.write(data)
-        with open("./love-actions-android/love-android/app/src/normal/res/layout/activity_about.xml", "r+", encoding="utf-8") as file:
-          data = file.read()
-          data = data.replace("LÖVE for Android", "${{ inputs.app-name }}")
-          file.seek(0)
-          file.truncate()
-          file.write(data)
+        try:
+          with open("./love-actions-android/love-android/fastlane/metadata/android/en-US/title.txt", "w", encoding="utf-8") as file:
+            file.write("""${{ inputs.app-name }}""")
+        except:
+          pass
+        try:
+          with open("./love-actions-android/love-android/settings.gradle", "r+", encoding="utf-8") as file:
+            data = file.read()
+            data = data.replace("LÖVE for Android", "${{ inputs.app-name }}")
+            file.seek(0)
+            file.truncate()
+            file.write(data)
+        except:
+          pass
+        try:
+          with open("./love-actions-android/love-android/settings.gradle", "r+", encoding="utf-8") as file:
+            data = file.read()
+            data = data.replace("LÖVE for Android", "${{ inputs.app-name }}")
+            file.seek(0)
+            file.truncate()
+            file.write(data)
+        except:
+          pass
+        try:
+          with open("./love-actions-android/love-android/app/src/normal/res/layout/activity_about.xml", "r+", encoding="utf-8") as file:
+            data = file.read()
+            data = data.replace("LÖVE for Android", "${{ inputs.app-name }}")
+            file.seek(0)
+            file.truncate()
+            file.write(data)
+        except:
+          pass
     - name: Cache gradle
       uses: actions/cache@v4
       with:
