@@ -200,6 +200,7 @@ runs:
           data = file.read()
           data = data\
             .replace("LÖVE for Android", "${{ inputs.app-name }}")\
+            .replace("${NAME}", "${{ inputs.app-name }}")\
             .replace("@drawable/love", "${{ inputs.icon-specifier }}")
           try:
             scheme = "${{ inputs.custom-scheme }}".split("://")[0]
@@ -217,6 +218,7 @@ runs:
           file.seek(0)
           file.truncate()
           file.write(data)
+          print("Writing file ./love-actions-android/love-android/app/src/main/AndroidManifest.xml\n" + data)
         with open("./love-actions-android/love-android/gradle.properties", "r+", encoding="utf-8") as file: # 11.4+
           data = file.read()
           data = re.sub(r'^#?\s*app.name\s*=\s*.+$', "app.name=${{ inputs.app-name }}", data, re.MULTILINE)
@@ -226,6 +228,7 @@ runs:
           file.seek(0)
           file.truncate()
           file.write(data)
+          print("Writing file ./love-actions-android/love-android/gradle.properties\n" + data)
         with open("./love-actions-android/love-android/app/build.gradle", "r+", encoding="utf-8") as file: # < 11.4
           data = file.read()
           data = re.sub(r'^\s*versionName ".+"$', '        versionName "${{ inputs.version-string }}"', data, re.MULTILINE)
@@ -245,9 +248,11 @@ runs:
           file.seek(0)
           file.truncate()
           file.write(data)
+          print("Writing file ./love-actions-android/love-android/app/build.gradle\n" + data)
         try:
           with open("./love-actions-android/love-android/fastlane/metadata/android/en-US/title.txt", "w", encoding="utf-8") as file:
             file.write("""${{ inputs.app-name }}""")
+            print("Writing file ./love-actions-android/love-android/fastlane/metadata/android/en-US/title.txt")
         except:
           pass
         try:
@@ -257,15 +262,7 @@ runs:
             file.seek(0)
             file.truncate()
             file.write(data)
-        except:
-          pass
-        try:
-          with open("./love-actions-android/love-android/settings.gradle", "r+", encoding="utf-8") as file:
-            data = file.read()
-            data = data.replace("LÖVE for Android", "${{ inputs.app-name }}")
-            file.seek(0)
-            file.truncate()
-            file.write(data)
+            print("Writing file ./love-actions-android/love-android/settings.gradle\n" + data)
         except:
           pass
         try:
@@ -275,6 +272,7 @@ runs:
             file.seek(0)
             file.truncate()
             file.write(data)
+            print("Writing file ./love-actions-android/love-android/app/src/normal/res/layout/activity_about.xml\n" + data)
         except:
           pass
     - name: Cache gradle
