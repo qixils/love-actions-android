@@ -219,7 +219,7 @@ runs:
           file.truncate()
           file.write(data)
           print("Writing file ./love-actions-android/love-android/app/src/main/AndroidManifest.xml\n" + data)
-        with open("gradle.properties", "r+", encoding="utf-8") as file: # 11.4+
+        with open("./love-actions-android/love-android/gradle.properties", "r+", encoding="utf-8") as file: # 11.4+
           data = file.read()
           data = re.sub(r'^#?\s*app.name\s*=\s*.+$', "app.name=${{ inputs.app-name }}", data, flags=re.MULTILINE)
           data = re.sub(r'^#?\s*app.name_byte_array\s*=\s*.+$', "#app.name_byte_array=" + ",".join(str(x) for x in """${{ inputs.app-name }}""".encode('utf-8')), data, flags=re.MULTILINE)
@@ -229,7 +229,7 @@ runs:
           file.seek(0)
           file.truncate()
           file.write(data)
-          print("Writing file gradle.properties\n" + data)
+          print("Writing file ./love-actions-android/love-android/gradle.properties\n" + data)
         with open("./love-actions-android/love-android/app/build.gradle", "r+", encoding="utf-8") as file: # < 11.4
           data = file.read()
           data = re.sub(r'^\s*versionName ".+"$', '        versionName "${{ inputs.version-string }}"', data, flags=re.MULTILINE)
