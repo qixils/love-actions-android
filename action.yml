@@ -219,20 +219,21 @@ runs:
           file.truncate()
           file.write(data)
           print("Writing file ./love-actions-android/love-android/app/src/main/AndroidManifest.xml\n" + data)
-        with open("./love-actions-android/love-android/gradle.properties", "r+", encoding="utf-8") as file: # 11.4+
+        with open("gradle.properties", "r+", encoding="utf-8") as file: # 11.4+
           data = file.read()
-          data = re.sub(r'^#?\s*app.name\s*=\s*.+$', "app.name=${{ inputs.app-name }}", data, re.MULTILINE)
-          data = re.sub(r'^#?\s*app.name_byte_array\s*=\s*.+$', "#app.name_byte_array=" + ",".join(str(x) for x in """${{ inputs.app-name }}""".encode('utf-8')), data, re.MULTILINE)
-          data = re.sub(r'^app.version_name\s*=\s*.+$', "app.version_name=${{ inputs.version-string }}", data, re.MULTILINE)
-          data = re.sub(r'^app.version_code\s*=\s*\d+$', "app.version_code=${{ inputs.version-code }}", data, re.MULTILINE)
+          data = re.sub(r'^#?\s*app.name\s*=\s*.+$', "app.name=${{ inputs.app-name }}", data, flags=re.MULTILINE)
+          data = re.sub(r'^#?\s*app.name_byte_array\s*=\s*.+$', "#app.name_byte_array=" + ",".join(str(x) for x in """${{ inputs.app-name }}""".encode('utf-8')), data, flags=re.MULTILINE)
+          data = re.sub(r'^app.application_id\s*=\s*.+$', "app.application_id=${{ inputs.bundle-id }}", data, flags=re.MULTILINE)
+          data = re.sub(r'^app.version_name\s*=\s*.+$', "app.version_name=${{ inputs.version-string }}", data, flags=re.MULTILINE)
+          data = re.sub(r'^app.version_code\s*=\s*\d+$', "app.version_code=${{ inputs.version-code }}", data, flags=re.MULTILINE)
           file.seek(0)
           file.truncate()
           file.write(data)
-          print("Writing file ./love-actions-android/love-android/gradle.properties\n" + data)
+          print("Writing file gradle.properties\n" + data)
         with open("./love-actions-android/love-android/app/build.gradle", "r+", encoding="utf-8") as file: # < 11.4
           data = file.read()
-          data = re.sub(r'^\s*versionName ".+"$', '        versionName "${{ inputs.version-string }}"', data, re.MULTILINE)
-          data = re.sub(r'^\s*versionCode \d+$', "        versionCode ${{ inputs.version-code }}", data, re.MULTILINE)
+          data = re.sub(r'^\s*versionName ".+"$', '        versionName "${{ inputs.version-string }}"', data, flags=re.MULTILINE)
+          data = re.sub(r'^\s*versionCode \d+$', "        versionCode ${{ inputs.version-code }}", data, flags=re.MULTILINE)
           data = data.replace("org.love2d.android", "${{ inputs.bundle-id }}")
           insert_pos = data.find("\n", data.find("proguardFiles")) + 1
           data = data[:insert_pos] + "            signingConfig signingConfigs.release\n" + data[insert_pos:]
