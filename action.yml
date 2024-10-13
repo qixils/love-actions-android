@@ -307,7 +307,7 @@ runs:
       run: |
         mv ./love-actions-android/love-android/app/build/outputs/apk/embedRecord/debug/app-embed-record-debug.apk ${{ inputs.output-folder }}/${{ inputs.product-name }}-debug.apk
     - name: Build package (Release)
-      if: "${{ inputs.keystore-alias != '' && inputs.keystore-base64 != '' && inputs.keystore-key-password != '' && inputs.keystore-store-password != '' }}"
+      if: "${{ inputs.keystore-alias != '' && inputs.keystore-base64 != '' }}"
       shell: bash
       run: |
         echo "${{ inputs.keystore-base64 }}" | base64 -d > ./love-actions-android/love-android/app/android.keystore
@@ -315,7 +315,7 @@ runs:
         chmod +x ./gradlew
         ./gradlew assembleEmbedRecordRelease
     - name: Rename package (Release)
-      if: "${{ inputs.keystore-alias != '' && inputs.keystore-base64 != '' && inputs.keystore-key-password != '' && inputs.keystore-store-password != '' }}"
+      if: "${{ inputs.keystore-alias != '' && inputs.keystore-base64 != '' }}"
       shell: bash
       run: mv ./love-actions-android/love-android/app/build/outputs/apk/embedRecord/release/app-embed-record-release.apk ${{ inputs.output-folder }}/${{ inputs.product-name }}-release.apk
     - name: Gather packages in output folder
